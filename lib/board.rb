@@ -17,4 +17,8 @@ class Board
     end
     spaces_array
   end
+
+  def find_space(coord_array)
+    spaces.index(coord_array)
+  end
 end
