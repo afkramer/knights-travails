@@ -10,11 +10,7 @@ class Board
 
   def initialize_spaces
     spaces_array = []
-    (0..7).each do |x|
-      (0..7).each do |y|
-        spaces_array << [x, y]
-      end
-    end
+    (0..7).to_a.repeated_permutation(2) { |perm| spaces_array << perm }
     spaces_array
   end
 end
