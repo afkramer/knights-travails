@@ -41,7 +41,7 @@ class Knight
     space = @moves_adjacency_list[@board.spaces.index(start_coords)]
     to_traverse = [space.adjacent_coords]
     curr_level = 1
-    curr_array_counter = 
+    curr_array_counter = 1
     # Somehow I need to track which level I'm on to be able to track which moves to together
     # I'll need to duplicate the starting moves for each successive array of adjacent moves
   end
