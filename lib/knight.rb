@@ -59,7 +59,7 @@ class Knight
   end
 
   # Works but returns the first path, not the shortest
-  def knight_moves(start_coords, end_coords, prev_coords, moves_required = [])
+  def knight_moves(start_coords, end_coords, prev_coords = [], moves_required = [])
     return nil if moves_required.include?(start_coords)
 
     moves_required << start_coords
@@ -72,7 +72,9 @@ class Knight
     space.adjacent_coords.each do |coords|
       #break if moves_required.include?(end_coords)
 
-      knight_moves_recur(coords, end_coords, moves_required) if move_makes_sense?(coords, start_coords, prev_coords, end_coords)
+      if move_makes_sense?(coords, start_coords, prev_coords, end_coords)
+        knight_moves_recur(coords, end_coords, moves_required)
+      end
     end
     moves_required
   end
@@ -101,18 +103,28 @@ class Knight
     y_between && x_between
   end
 
+  def coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
+    x_between = coord_between?(coords_to_test[0], start_coords[0], end_coords[0])
+    y_between = coord_between?(coords_to_test[1], start_coords[1], end_coords[1])
+    x_within = coord_within_bounds?(coords_to_test[0], end_coords[0])
+    y_within = coord_within_bounds?(coords_to_test[1], end_coords[1])
+    (x_between && y_within) || (y_between && x_within)
+  end
+
   def coord_between?(next_val, start_val, end_val)
     (start_val <= next_val && next_val <= end_val) || (start_val >= next_val && next_val >= end_val)
   end
 
+  def coord_within_bounds?(coord_to_test, end_coord)
+    if coord_to_test < end_coord
+      end_coord - 2 <= coord_to_test && coord_to_test <= end_coord
+    else
+      end_coord <= coord_to_test && coord_to_test <= end_coord + 2
+    end
+  end
 end
 
 
 
 knight = Knight.new
-#p knight.knight_moves_recur([3, 3], [4, 3])
-
-puts "Next= [5,5], Start=[3,4], End=[5,6] #{knight.both_coords_between?([5,5], [3,4],[5,6])}"
-puts "Next=[5,6], Start=[5,7], End=[4,3] #{knight.both_coords_between?([5,6], [5,7], [4,3])}"
-puts "Next=[5,6], Start=[8,8], End=[4,5] #{knight.both_coords_between?([5,6], [8,8], [4,5])}"
-puts "Next=[5,6], Start=[5,4], End=[3,4] #{knight.both_coords_between?([5,6], [5,4], [3,4])}"
+p knight.knight_moves([3, 3], [4, 3])
