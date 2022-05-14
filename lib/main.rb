@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require './board'
-require './space'
-require './knight'
+require_relative './board'
+require_relative './space'
+require_relative './knight'
 
 def main
   knight = Knight.new
