@@ -94,6 +94,17 @@ class Knight
     end
     false
   end
+
+  def both_coords_between?(coords_to_test, start_coords, end_coords)
+    x_between = coord_between?(coords_to_test[0], start_coords[0], end_coords[0])
+    y_between = coord_between?(coords_to_test[1], start_coords[1], end_coords[1])
+    y_between && x_between
+  end
+
+  def coord_between?(next_val, start_val, end_val)
+    (start_val <= next_val && next_val <= end_val) || (start_val >= next_val && next_val >= end_val)
+  end
+
 end
 
 
@@ -101,8 +112,7 @@ end
 knight = Knight.new
 #p knight.knight_moves_recur([3, 3], [4, 3])
 
-puts "Try [3, 4] and [4, 4]: #{knight.too_close?([3,4], [4, 4])}"
-puts "Try [2,2] and [4,4]: #{knight.too_close?([2,2], [4, 4])}"
-puts "Try [6,6] and [4,4]: #{knight.too_close?([6,6], [4, 4])}"
-puts "Try [7,6] and [4,4]: #{knight.too_close?([7,6], [4, 4])}"
-puts "Try [2,4] and [4,4]: #{knight.too_close?([2,4], [4, 4])}"
+puts "Next= [5,5], Start=[3,4], End=[5,6] #{knight.both_coords_between?([5,5], [3,4],[5,6])}"
+puts "Next=[5,6], Start=[5,7], End=[4,3] #{knight.both_coords_between?([5,6], [5,7], [4,3])}"
+puts "Next=[5,6], Start=[8,8], End=[4,5] #{knight.both_coords_between?([5,6], [8,8], [4,5])}"
+puts "Next=[5,6], Start=[5,4], End=[3,4] #{knight.both_coords_between?([5,6], [5,4], [3,4])}"
