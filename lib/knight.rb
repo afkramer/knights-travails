@@ -70,23 +70,25 @@ class Knight
     end
 
     space.adjacent_coords.each do |coords|
-      #break if moves_required.include?(end_coords)
+      break if moves_required.include?(end_coords)
 
       if move_makes_sense?(coords, start_coords, prev_coords, end_coords)
-        knight_moves_recur(coords, end_coords, moves_required)
+        knight_moves(coords, end_coords, start_coords, moves_required)
       end
     end
     moves_required
   end
 
   def move_makes_sense?(coords_to_test, start_coords, prev_coords, end_coords)
-    return false if coords == prev_coords
+    return false if coords_to_test == prev_coords
 
     return false if too_close?(coords_to_test, end_coords)
 
     return true if both_coords_between?(coords_to_test, start_coords, end_coords)
 
     return true if coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
+
+    return true if next_move_end?(coords_to_test, end_coords)
   end
 
   def too_close?(coords_to_test, end_coords)
@@ -106,20 +108,28 @@ class Knight
   def coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
     x_between = coord_between?(coords_to_test[0], start_coords[0], end_coords[0])
     y_between = coord_between?(coords_to_test[1], start_coords[1], end_coords[1])
-    x_within = coord_within_bounds?(coords_to_test[0], end_coords[0])
-    y_within = coord_within_bounds?(coords_to_test[1], end_coords[1])
+    x_within = coord_within_bounds?(coords_to_test[0], end_coords[0], 2)
+    y_within = coord_within_bounds?(coords_to_test[1], end_coords[1], 2)
     (x_between && y_within) || (y_between && x_within)
+  end
+
+  def next_move_end?(coords_to_test, end_coords)
+    x_1_away = coord_within_bounds?(coords_to_test[0], end_coords[0], 1)
+    x_2_away = coord_within_bounds?(coords_to_test[0], end_coords[0], 2)
+    y_1_away = coord_within_bounds?(coords_to_test[1], end_coords[1], 1)
+    y_2_away = coord_within_bounds?(coords_to_test[1], end_coords[1], 2)
+    (x_1_away && y_2_away) || (x_2_away && y_1_away)
   end
 
   def coord_between?(next_val, start_val, end_val)
     (start_val <= next_val && next_val <= end_val) || (start_val >= next_val && next_val >= end_val)
   end
 
-  def coord_within_bounds?(coord_to_test, end_coord)
+  def coord_within_bounds?(coord_to_test, end_coord, distance)
     if coord_to_test < end_coord
-      end_coord - 2 <= coord_to_test && coord_to_test <= end_coord
+      end_coord - distance <= coord_to_test && coord_to_test <= end_coord
     else
-      end_coord <= coord_to_test && coord_to_test <= end_coord + 2
+      end_coord <= coord_to_test && coord_to_test <= end_coord + distance
     end
   end
 end
@@ -127,4 +137,4 @@ end
 
 
 knight = Knight.new
-p knight.knight_moves([3, 3], [4, 3])
+p knight.knight_moves([1, 6], [6, 1])
