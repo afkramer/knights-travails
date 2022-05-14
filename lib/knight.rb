@@ -36,16 +36,6 @@ class Knight
     [start_coords[0] + move_coords[0], start_coords[1] + move_coords[1]]
   end
 
-  def knight_moves_level_order(start_coords, end_coords)
-    moves_required_hash = {}
-    space = @moves_adjacency_list[@board.spaces.index(start_coords)]
-    to_traverse = [space.adjacent_coords]
-    curr_level = 1
-    curr_array_counter = 1
-    # Somehow I need to track which level I'm on to be able to track which moves to together
-    # I'll need to duplicate the starting moves for each successive array of adjacent moves
-  end
-
   # Tried to update knight_moves_recur with min_required but it returns []
   # The moves_required list just keeps growing -> how to reset with relevant beginning moves?
   # Need to find a way to break out of the loops
@@ -69,7 +59,7 @@ class Knight
   end
 
   # Works but returns the first path, not the shortest
-  def knight_moves_recur(start_coords, end_coords, moves_required = [])
+  def knight_moves(start_coords, end_coords, prev_coords, moves_required = [])
     return nil if moves_required.include?(start_coords)
 
     moves_required << start_coords
@@ -80,11 +70,21 @@ class Knight
     end
 
     space.adjacent_coords.each do |coords|
-      break if moves_required.include?(end_coords)
+      #break if moves_required.include?(end_coords)
 
-      knight_moves_recur(coords, end_coords, moves_required)
+      knight_moves_recur(coords, end_coords, moves_required) if move_makes_sense?(coords, start_coords, prev_coords, end_coords)
     end
     moves_required
+  end
+
+  def move_makes_sense?(coords_to_test, start_coords, prev_coords, end_coords)
+    return false if coords == prev_coords
+    
+    return false if too_close?(coords_to_test, end_coords)
+
+    return true if both_coords_between?(coords_to_test, start_coords, end_coords)
+
+    return true if coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
   end
 end
 
