@@ -40,16 +40,20 @@ class Knight
     space = @moves_adjacency_list[@board.spaces.index(start_coords)]
     if space.adjacent_coords.include?(end_coords)
       moves_required << end_coords
-      moves_required
+      return moves_required
     end
 
+    good_paths = 0
     space.adjacent_coords.each do |coords|
       break if moves_required.include?(end_coords)
 
       if move_makes_sense?(coords, start_coords, prev_coords, end_coords)
-        knight_moves(coords, end_coords, start_coords, moves_required)
+        good_paths += 1
+        moves_required = knight_moves(coords, end_coords, start_coords, moves_required)
       end
     end
+    return moves_required[0..-2] if good_paths.zero?
+
     moves_required
   end
 
@@ -63,10 +67,12 @@ class Knight
     return true if coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
 
     return true if next_move_end?(coords_to_test, end_coords)
+
+    false
   end
 
   def too_close?(coords_to_test, end_coords)
-    too_close_coords = [[-2, 2], [-2, -2], [2, -2], [2, 2], [0, 1], [-1, 0], [0, -1], [1, 0]]
+    too_close_coords = [[-2, 2], [-2, -2], [2, -2], [2, 2], [0, 1], [-1, 0], [0, -1], [1, 0], [-1, 1], [-1, -1], [1, -1], [1, 1]]
     too_close_coords.each do |coords|
       return true if coords_to_test == [end_coords[0] + coords[0], end_coords[1] + coords[1]]
     end
