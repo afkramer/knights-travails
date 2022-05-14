@@ -79,16 +79,30 @@ class Knight
 
   def move_makes_sense?(coords_to_test, start_coords, prev_coords, end_coords)
     return false if coords == prev_coords
-    
+
     return false if too_close?(coords_to_test, end_coords)
 
     return true if both_coords_between?(coords_to_test, start_coords, end_coords)
 
     return true if coord_between_and_coord_within_bounds?(coords_to_test, start_coords, end_coords)
   end
+
+  def too_close?(coords_to_test, end_coords)
+    too_close_coords = [[-2, 2], [-2, -2], [2, -2], [2, 2], [0, 1], [-1, 0], [0, -1], [1, 0]]
+    too_close_coords.each do |coords|
+      return true if coords_to_test == [end_coords[0] + coords[0], end_coords[1] + coords[1]]
+    end
+    false
+  end
 end
 
 
 
 knight = Knight.new
-p knight.knight_moves_recur([3, 3], [4, 3])
+#p knight.knight_moves_recur([3, 3], [4, 3])
+
+puts "Try [3, 4] and [4, 4]: #{knight.too_close?([3,4], [4, 4])}"
+puts "Try [2,2] and [4,4]: #{knight.too_close?([2,2], [4, 4])}"
+puts "Try [6,6] and [4,4]: #{knight.too_close?([6,6], [4, 4])}"
+puts "Try [7,6] and [4,4]: #{knight.too_close?([7,6], [4, 4])}"
+puts "Try [2,4] and [4,4]: #{knight.too_close?([2,4], [4, 4])}"
