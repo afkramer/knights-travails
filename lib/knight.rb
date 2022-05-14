@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative './board'
-require_relative './space'
-
 # Basic functionality of the knight chess piece
 class Knight
   attr_reader :moves_adjacency_list
@@ -36,29 +33,6 @@ class Knight
     [start_coords[0] + move_coords[0], start_coords[1] + move_coords[1]]
   end
 
-  # Tried to update knight_moves_recur with min_required but it returns []
-  # The moves_required list just keeps growing -> how to reset with relevant beginning moves?
-  # Need to find a way to break out of the loops
-  def knight_moves_recur_min(start_coords, end_coords, moves_required = [], min_required = [])
-    return nil if moves_required.include?(start_coords)
-
-    moves_required << start_coords
-    space = @moves_adjacency_list[@board.spaces.index(start_coords)]
-    if space.adjacent_coords.include?(end_coords)
-      moves_required << end_coords
-      min_required = moves_required if moves_required.length < min_required.length || min_required.empty?
-      # will I need to reset the list here to [] or just previous moves?
-      # The list of moves could potentially keep growing
-    end
-
-    space.adjacent_coords.each do |coords|
-
-      knight_moves(coords, end_coords, moves_required, min_required)
-    end
-    min_required
-  end
-
-  # Works but returns the first path, not the shortest
   def knight_moves(start_coords, end_coords, prev_coords = [], moves_required = [])
     return nil if moves_required.include?(start_coords)
 
@@ -133,8 +107,3 @@ class Knight
     end
   end
 end
-
-
-
-knight = Knight.new
-p knight.knight_moves([1, 6], [6, 1])
